@@ -51,7 +51,7 @@ async def toggle_log(client, message):
         status_text = "Enabled" if new_status else "Disabled"
         await message.reply(f"🔄 **Edit Logging {status_text}!**")
 
-@bot.on_message(filters.edited)
+@bot.on_message(filters.update.edited_message)
 async def log_edits(client, message):
     chat_id = message.chat.id
     rule = rules.find_one({"chat_id": chat_id})
@@ -75,7 +75,7 @@ async def set_filter(client, message):
     rules.update_one({"chat_id": chat_id}, {"$addToSet": {"banned_words": word}}, upsert=True)
     await message.reply(f"✅ **Added Filtered Word:** `{word}`")
 
-@bot.on_message(filters.edited)
+@bot.on_message(filters.update.edited_message)
 async def auto_delete_edited(client, message):
     chat_id = message.chat.id
     rule = rules.find_one({"chat_id": chat_id})

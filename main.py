@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 from pymongo import MongoClient
 from config import config
 
-# Bot Client Setup
+# Initialize Bot
 bot = Client(
     "edit_guardian_bot",
     api_id=config.API_ID,
@@ -17,12 +17,12 @@ logs = db["EditLogs"]
 rules = db["GroupRules"]
 auth_users = db["AuthorizedUsers"]
 
-# /start command
+# /start Command
 @bot.on_message(filters.command("start"))
 async def start(client, message):
-    await message.reply("👋 Hello! I am **Edit Guardian & Moderation Bot**. I monitor edits and help with group moderation.")
+    await message.reply("👋 Hello! I monitor edits and help with group moderation.")
 
-# /help command
+# /help Command
 @bot.on_message(filters.command("help"))
 async def help(client, message):
     await message.reply("⚙ **Available Commands:**\n"
@@ -51,7 +51,6 @@ async def toggle_log(client, message):
         status_text = "Enabled" if new_status else "Disabled"
         await message.reply(f"🔄 **Edit Logging {status_text}!**")
 
-
 @bot.on_message(filters.edited)
 async def log_edits(client, message):
     chat_id = message.chat.id
@@ -76,7 +75,7 @@ async def set_filter(client, message):
     rules.update_one({"chat_id": chat_id}, {"$addToSet": {"banned_words": word}}, upsert=True)
     await message.reply(f"✅ **Added Filtered Word:** `{word}`")
 
-@bot.on_message(filters.update.edited_message)
+@bot.on_message(filters.edited)
 async def auto_delete_edited(client, message):
     chat_id = message.chat.id
     rule = rules.find_one({"chat_id": chat_id})

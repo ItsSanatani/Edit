@@ -51,7 +51,8 @@ async def toggle_log(client, message):
         status_text = "Enabled" if new_status else "Disabled"
         await message.reply(f"🔄 **Edit Logging {status_text}!**")
 
-@bot.on_message(filters.update.edited_message)
+
+@bot.on_message(filters.edited)
 async def log_edits(client, message):
     chat_id = message.chat.id
     rule = rules.find_one({"chat_id": chat_id})
